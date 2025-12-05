@@ -4,6 +4,8 @@ import de.thm.se.backend.model.Studierende;
 import de.thm.se.backend.util.DatabaseConnection;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class StudierendeDAO {
@@ -36,9 +38,42 @@ public class StudierendeDAO {
             }
         }
     }
+
     // READ - Studierender nach ID
+    public Optional<Studierende> findById(int studiId) throws SQLException {
+        String sql = "SELECT * FROM STUDIERENDE WHERE studierenden_id = ?";
+
+        try (Connection conn = DatabaseConnection.connect();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, studiId);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                Studierende studi = mapResultSet(rs);
+                DatabaseConnection.closeResultSet(rs);
+                return Optional.of(studi);
+            }
+            DatabaseConnection.closeResultSet(rs);
+            return Optional.empty();
+        }
+    }
 
     // READ - Alle Studierende
+    public List<Studierende> findAll() throws SQLException {
+        String sql = "SELECT * FROM STUDIERENDE";
+        List<Studierende> studi = new ArrayList<>();
+
+        try (Connection conn = DatabaseConnection.connect();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                studi.add(mapResultSet(rs));
+            }
+            DatabaseConnection.closeResultSet(rs);
+        }
+        return studi;
+    }
 
     // READ - Studierender nach Matrikelnummer
     public Optional<Studierende> findByMatrikelnummer(String matrikelnummer) throws SQLException {
