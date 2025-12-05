@@ -16,18 +16,18 @@ public class SwsBerechnung {
     private String rolle;
     private LocalDate berechnetAm;
 
-    //Konstruktor
-    public SwsBerechnung(){
+    // Konstruktor
+    public SwsBerechnung() {
     }
 
-    public SwsBerechnung(int arbeitId, int betreuerId, int semesterId, int pruefungsordnungId){
+    public SwsBerechnung(int arbeitId, int betreuerId, int semesterId, int pruefungsordnungId) {
         this.arbeitId = arbeitId;
         this.betreuerId = betreuerId;
         this.semesterId = semesterId;
         this.pruefungsordnungId = pruefungsordnungId;
     }
-    
-    //Getter und Setter
+
+    // Getter und Setter
     public int getSwsId() {
         return swsId;
     }
@@ -92,10 +92,12 @@ public class SwsBerechnung {
         this.berechnetAm = berechnetAm;
     }
 
-    //Hilfsmethoden
+    // Hilfsmethoden
     @Override
-    public String toString(){
-        return String.format("SWSBerechnung[ID=%d, ArbeitID=%d, BetreuerID=%d, SemesterID=%d, PrüfungsordnungID=%d, SWSWert=%f]", swsId, arbeitId, betreuerId, semesterId, pruefungsordnungId, swsWert);
+    public String toString() {
+        return String.format(
+                "SWSBerechnung[ID=%d, ArbeitID=%d, BetreuerID=%d, SemesterID=%d, PrüfungsordnungID=%d, SWSWert=%f]",
+                swsId, arbeitId, betreuerId, semesterId, pruefungsordnungId, swsWert);
     }
 
 }

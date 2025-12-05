@@ -1,6 +1,7 @@
 package de.thm.se.backend.model;
 
 import java.time.LocalDate;
+
 /**
  * Model-Klasse für Prüfungsordnung
  * Entspricht der Tabelle PRUEFUNGSORDNUNG
@@ -14,11 +15,12 @@ public class Pruefungsordnung {
     private int swsReferent;
     private int swsKoreferent;
 
-    //Konstruktor
-    public Pruefungsordnung(){
+    // Konstruktor
+    public Pruefungsordnung() {
     }
 
-    public Pruefungsordnung(int studiengangId, String bezeichnung, LocalDate gueltigAb, LocalDate gueltigBis, int swsReferent, int swsKoreferent){
+    public Pruefungsordnung(int studiengangId, String bezeichnung, LocalDate gueltigAb, LocalDate gueltigBis,
+            int swsReferent, int swsKoreferent) {
         this.studiengangId = studiengangId;
         this.bezeichnung = bezeichnung;
         this.gueltigAb = gueltigAb;
@@ -26,8 +28,8 @@ public class Pruefungsordnung {
         this.swsReferent = swsReferent;
         this.swsKoreferent = swsKoreferent;
     }
-    
-    //Getter und Setter
+
+    // Getter und Setter
     public int getPruefungsordnungId() {
         return pruefungsordnungId;
     }
@@ -84,9 +86,10 @@ public class Pruefungsordnung {
         this.swsKoreferent = swsKoreferent;
     }
 
-    //Hilfsmethoden
+    // Hilfsmethoden
     @Override
-    public String toString(){
-        return String.format("Prüfungsordnung[ID=%d, Bezeichnung=%s, GültigAb=&d, GültigBis=%d]", pruefungsordnungId, bezeichnung, gueltigAb, gueltigBis);
+    public String toString() {
+        return String.format("Prüfungsordnung[ID=%d, Bezeichnung=%s, GültigAb=&d, GültigBis=%d]", pruefungsordnungId,
+                bezeichnung, gueltigAb, gueltigBis);
     }
 }

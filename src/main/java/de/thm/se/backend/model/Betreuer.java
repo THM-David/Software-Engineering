@@ -8,21 +8,21 @@ public class Betreuer {
     private int betreuerId;
     private String vorname;
     private String nachname;
-    private String titel; //z.B. "Prof. Dr."
+    private String titel; // z.B. "Prof. Dr."
     private String email;
-    private String rolle; //z.B. "Professor", "Wissenschaftlicher Mitarbeiter"
+    private String rolle; // z.B. "Professor", "Wissenschaftlicher Mitarbeiter"
 
-    //Konstruktoren
+    // Konstruktoren
     public Betreuer() {
     }
-    
+
     public Betreuer(String vorname, String nachname, String email) {
         this.vorname = vorname;
         this.nachname = nachname;
         this.email = email;
     }
-    
-    //Getter und Setter
+
+    // Getter und Setter
     public int getBetreuerId() {
         return betreuerId;
     }
@@ -71,9 +71,9 @@ public class Betreuer {
         this.rolle = rolle;
     }
 
-    //Hilfsmethoden
+    // Hilfsmethoden
     public String getVollstaendigerName() {
-        if(titel != null && !titel.isEmpty()) {
+        if (titel != null && !titel.isEmpty()) {
             return titel + " " + vorname + " " + nachname;
         }
         return vorname + " " + nachname;

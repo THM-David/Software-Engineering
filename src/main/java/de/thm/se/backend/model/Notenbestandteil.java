@@ -9,23 +9,23 @@ public class Notenbestandteil {
     private int notenId;
     private int arbeitId;
     private int betreuerId;
-    private String rolle; //"Referent" oder "Korreferent"
+    private String rolle; // "Referent" oder "Korreferent"
     private double noteArbeit;
     private double noteKolloquium;
     private double gewichtung;
-    
-    //Konstruktoren
-    public Notenbestandteil(){
+
+    // Konstruktoren
+    public Notenbestandteil() {
     }
-    
-    public Notenbestandteil(int arbeitId, int betreuerId, String rolle){
+
+    public Notenbestandteil(int arbeitId, int betreuerId, String rolle) {
         this.arbeitId = arbeitId;
         this.betreuerId = betreuerId;
         this.rolle = rolle;
         this.gewichtung = rolle.equals("Referent") ? 0.75 : 0.25;
     }
-    
-    //Getter und Setter
+
+    // Getter und Setter
     public int getNotenId() {
         return notenId;
     }
@@ -82,18 +82,19 @@ public class Notenbestandteil {
         this.gewichtung = gewichtung;
     }
 
-    //Berechnungsmethoden
+    // Berechnungsmethoden
     public double berechneGesamtnote() {
-        return (noteArbeit * 0.7 + noteKolloquium * 0.3); //70% Arbeit und 30% Kolloquium
+        return (noteArbeit * 0.7 + noteKolloquium * 0.3); // 70% Arbeit und 30% Kolloquium
     }
 
     public double berechneGewichteteNote() {
         return berechneGesamtnote() * gewichtung;
     }
 
-    //Hilfsmethoden
+    // Hilfsmethoden
     @Override
     public String toString() {
-        return String.format("Note[%s: Arbeit=%.1f, Kolloquium=%.1f, Gewichtung=%.of%%]", rolle, noteArbeit, noteKolloquium, gewichtung * 100);
+        return String.format("Note[%s: Arbeit=%.1f, Kolloquium=%.1f, Gewichtung=%.of%%]", rolle, noteArbeit,
+                noteKolloquium, gewichtung * 100);
     }
 }

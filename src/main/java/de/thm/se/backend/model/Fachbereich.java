@@ -1,6 +1,5 @@
 package de.thm.se.backend.model;
 
-
 /**
  * Model-Klasse für Fachbereiche
  * Entspricht der Tabelle FACHBEREICH
@@ -10,16 +9,16 @@ public class Fachbereich {
     private String bezeichnung;
     private String fbname;
 
-    //Konstruktoren
+    // Konstruktoren
     public Fachbereich() {
     }
 
     public Fachbereich(String bezeichnung, String fbname) {
         this.bezeichnung = bezeichnung;
-        this.fbname =fbname;
+        this.fbname = fbname;
     }
-    
-    //Getter und Setter
+
+    // Getter und Setter
     public int getFachbereichId() {
         return fachbereichId;
     }
@@ -44,9 +43,9 @@ public class Fachbereich {
         this.fbname = fbname;
     }
 
-    //Hilfsmethoden
+    // Hilfsmethoden
     @Override
-    public String toString(){
+    public String toString() {
         return String.format("Fachbereich[ID=%d, Bezeichnung=%s]", fachbereichId, bezeichnung);
     }
 }

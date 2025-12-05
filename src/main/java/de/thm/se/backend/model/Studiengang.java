@@ -9,15 +9,16 @@ public class Studiengang {
     private int fachbereichId;
     private String bezeichnung;
     private String kuerzel;
-    private String abschlusstitel; //z.B. "Master of Science Software Engineering"
-    private String abschluss; //z.B. "M.Sc"
+    private String abschlusstitel; // z.B. "Master of Science Software Engineering"
+    private String abschluss; // z.B. "M.Sc"
     private boolean aktiv;
 
-    //Konstruktor
+    // Konstruktor
     public Studiengang() {
     }
 
-    public Studiengang(String bezeichnung, int fachbereichId, String kuerzel, String abschlusstitel, String abschluss, boolean aktiv) {
+    public Studiengang(String bezeichnung, int fachbereichId, String kuerzel, String abschlusstitel, String abschluss,
+            boolean aktiv) {
         this.bezeichnung = bezeichnung;
         this.fachbereichId = fachbereichId;
         this.kuerzel = kuerzel;
@@ -25,8 +26,8 @@ public class Studiengang {
         this.abschluss = abschluss;
         this.aktiv = aktiv;
     }
-    
-    //Getter und Setter
+
+    // Getter und Setter
     public int getStudiengangId() {
         return studiengangId;
     }
@@ -83,8 +84,9 @@ public class Studiengang {
         this.aktiv = aktiv;
     }
 
-    //Hilfsmethoden
-    public String toString(){
-        return String.format("Studiengang[ID=%d, Bezeichnung=%s, Abschlusstitel=%s, Aktiv=%b]", studiengangId, bezeichnung, abschlusstitel, aktiv);
+    // Hilfsmethoden
+    public String toString() {
+        return String.format("Studiengang[ID=%d, Bezeichnung=%s, Abschlusstitel=%s, Aktiv=%b]", studiengangId,
+                bezeichnung, abschlusstitel, aktiv);
     }
 }

@@ -15,19 +15,19 @@ public class Studierende {
     private String email;
     private LocalDate geburtsdatum;
     private String adresse;
-    
-    //Konstruktor
+
+    // Konstruktor
     public Studierende() {
     }
-    
-    public Studierende(String matrikelnummer, String vorname, String nachname, String email){
+
+    public Studierende(String matrikelnummer, String vorname, String nachname, String email) {
         this.matrikelnummer = matrikelnummer;
         this.vorname = vorname;
         this.nachname = nachname;
         this.email = email;
     }
-    
-    //Getter und Setter
+
+    // Getter und Setter
     public int getStudierendenId() {
         return studierendenId;
     }
@@ -84,14 +84,15 @@ public class Studierende {
         this.adresse = adresse;
     }
 
-    //Hilfsmethoden
+    // Hilfsmethoden
     @Override
     public String toString() {
-        return String.format("Studierender [ID=%d, Matrikel=%s, Name=%s %s, Email=%s]", studierendenId, matrikelnummer, vorname, nachname, email);
+        return String.format("Studierender [ID=%d, Matrikel=%s, Name=%s %s, Email=%s]", studierendenId, matrikelnummer,
+                vorname, nachname, email);
     }
 
     public String getVollstaendigerName() {
         return vorname + " " + nachname;
     }
-    
+
 }

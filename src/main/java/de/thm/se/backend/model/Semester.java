@@ -8,7 +8,7 @@ import java.time.LocalDate;
  */
 public class Semester {
     private int semesterId;
-    private int semesterZeitId;
+    private int semesterzeitId;
     private String bezeichnung;
     private String typ;
     private LocalDate jahr;
@@ -18,7 +18,7 @@ public class Semester {
     }
     
     public Semester(int semesterZeitId, String bezeichnung, String typ, LocalDate jahr) {
-        this.semesterZeitId = semesterZeitId;
+        this.semesterzeitId = semesterZeitId;
         this.bezeichnung = bezeichnung;
         this.typ = typ;
         this.jahr = jahr;
@@ -33,12 +33,12 @@ public class Semester {
         this.semesterId = semesterId;
     }
 
-    public int getSemesterZeitId() {
-        return semesterZeitId;
+    public int getSemesterzeitId() {
+        return semesterzeitId;
     }
 
-    public void setSemesterZeitId(int semesterZeitId) {
-        this.semesterZeitId = semesterZeitId;
+    public void setSemesterzeitId(int semesterZeitId) {
+        this.semesterzeitId = semesterZeitId;
     }
 
     public String getBezeichnung() {

@@ -14,7 +14,7 @@ public class WissenschaftlicheArbeit {
     private String typ; // z.B. "Bachelor", "Master"
     private String status; // z.B. "In Bearbeitung", "Abgeschlossen"
 
-    //Konstruktoren
+    // Konstruktoren
     public WissenschaftlicheArbeit() {
     }
 
@@ -24,8 +24,8 @@ public class WissenschaftlicheArbeit {
         this.typ = typ;
         this.status = "Geplant";
     }
-    
-    //Getter und Setter
+
+    // Getter und Setter
     public int getArbeitId() {
         return arbeitId;
     }
@@ -90,7 +90,7 @@ public class WissenschaftlicheArbeit {
         this.status = status;
     }
 
-    //Hilfsmethoden
+    // Hilfsmethoden
     @Override
     public String toString() {
         return String.format("Arbeit[ID=%d, Title='%s', Typ=%s, Status=%s]", arbeitId, titel, typ, status);

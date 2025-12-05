@@ -6,23 +6,23 @@ import java.time.LocalDate;
  * Model-Klasse für SemesterZeit
  * Entspricht der Tabelle SEMESTERZEIT
  */
-public class SemesterZeit {
+public class Semesterzeit {
     private int semesterZeitId;
     private LocalDate beginn;
     private LocalDate ende;
     private String bezeichnung;
-    
-    //Konstruktoren
-    public SemesterZeit() {
+
+    // Konstruktoren
+    public Semesterzeit() {
     }
-    
-    public SemesterZeit(LocalDate beginn, LocalDate ende, String bezeichnung) {
+
+    public Semesterzeit(LocalDate beginn, LocalDate ende, String bezeichnung) {
         this.beginn = beginn;
         this.ende = ende;
         this.bezeichnung = bezeichnung;
     }
-    
-    //Getter und Setter
+
+    // Getter und Setter
     public int getSemesterZeitId() {
         return semesterZeitId;
     }
@@ -55,9 +55,9 @@ public class SemesterZeit {
         this.bezeichnung = bezeichnung;
     }
 
-    //Hilfsmethoden
+    // Hilfsmethoden
     @Override
-    public String toString(){
+    public String toString() {
         return String.format("SemesterZeit[ID=%d, Bezeichnung=&s", semesterZeitId, bezeichnung);
     }
 }
