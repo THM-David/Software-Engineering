@@ -7,7 +7,7 @@ import java.time.LocalDate;
  * Entspricht der Tabelle STUDIERENDE in der Datenbank
  */
 
-public class Studierender {
+public class Studierende {
     private int studierendenId;
     private String matrikelnummer;
     private String vorname;
@@ -17,10 +17,10 @@ public class Studierender {
     private String adresse;
     
     //Konstruktor
-    public Studierender() {
+    public Studierende() {
     }
     
-    public Studierender(String matrikelnummer, String vorname, String nachname, String email){
+    public Studierende(String matrikelnummer, String vorname, String nachname, String email){
         this.matrikelnummer = matrikelnummer;
         this.vorname = vorname;
         this.nachname = nachname;
@@ -86,11 +86,11 @@ public class Studierender {
 
     //Hilfsmethoden
     @Override
-    public Sting toString() {
+    public String toString() {
         return String.format("Studierender [ID=%d, Matrikel=%s, Name=%s %s, Email=%s]", studierendenId, matrikelnummer, vorname, nachname, email);
     }
 
-    public Sting getVollstaendigerName() {
+    public String getVollstaendigerName() {
         return vorname + " " + nachname;
     }
     

@@ -9,7 +9,7 @@ public class WissenschaftlicheArbeit {
     private int studierendenId;
     private int studiengangId;
     private int pruefungsordnungId;
-    private int semseterId;
+    private int semesterId;
     private String titel;
     private String typ; // z.B. "Bachelor", "Master"
     private String status; // z.B. "In Bearbeitung", "Abgeschlossen"
@@ -18,7 +18,7 @@ public class WissenschaftlicheArbeit {
     public WissenschaftlicheArbeit() {
     }
 
-    public WissenschaftlicheArbeit(int studierendenId, String titel, Sting typ) {
+    public WissenschaftlicheArbeit(int studierendenId, String titel, String typ) {
         this.studierendenId = studierendenId;
         this.titel = titel;
         this.typ = typ;
@@ -58,12 +58,12 @@ public class WissenschaftlicheArbeit {
         this.pruefungsordnungId = pruefungsordnungId;
     }
 
-    public int getSemseterId() {
-        return semseterId;
+    public int getSemesterId() {
+        return semesterId;
     }
 
-    public void setSemseterId(int semseterId) {
-        this.semseterId = semseterId;
+    public void setSemesterId(int semseterId) {
+        this.semesterId = semseterId;
     }
 
     public String getTitel() {

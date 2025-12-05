@@ -18,7 +18,7 @@ public class Pruefungsordnung {
     public Pruefungsordnung(){
     }
 
-    public Pruefungsordnung(int studiengangId, String bezeichnung, int gueltigAb, int gueltigBis, int swsReferent, int swsKoreferent){
+    public Pruefungsordnung(int studiengangId, String bezeichnung, LocalDate gueltigAb, LocalDate gueltigBis, int swsReferent, int swsKoreferent){
         this.studiengangId = studiengangId;
         this.bezeichnung = bezeichnung;
         this.gueltigAb = gueltigAb;
@@ -56,7 +56,7 @@ public class Pruefungsordnung {
         return gueltigAb;
     }
 
-    public void setGueltigAb(int gueltigAb) {
+    public void setGueltigAb(LocalDate gueltigAb) {
         this.gueltigAb = gueltigAb;
     }
 
@@ -64,7 +64,7 @@ public class Pruefungsordnung {
         return gueltigBis;
     }
 
-    public void setGueltigBis(int gueltigBis) {
+    public void setGueltigBis(LocalDate gueltigBis) {
         this.gueltigBis = gueltigBis;
     }
 
@@ -86,7 +86,7 @@ public class Pruefungsordnung {
 
     //Hilfsmethoden
     @Override
-    public toString(){
+    public String toString(){
         return String.format("Prüfungsordnung[ID=%d, Bezeichnung=%s, GültigAb=&d, GültigBis=%d]", pruefungsordnungId, bezeichnung, gueltigAb, gueltigBis);
     }
 }

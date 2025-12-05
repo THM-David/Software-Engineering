@@ -72,7 +72,7 @@ public class Betreuer {
     }
 
     //Hilfsmethoden
-    public Sting getVollstaendigerName() {
+    public String getVollstaendigerName() {
         if(titel != null && !titel.isEmpty()) {
             return titel + " " + vorname + " " + nachname;
         }

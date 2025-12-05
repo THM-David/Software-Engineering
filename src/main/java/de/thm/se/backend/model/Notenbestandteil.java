@@ -94,6 +94,6 @@ public class Notenbestandteil {
     //Hilfsmethoden
     @Override
     public String toString() {
-        return String.formt("Note[%s: Arbeit=%.1f, Kolloquium=%.1f, Gewichtung=%.of%%]", rolle, noteArbeit, noteKolloquium, gewichtung * 100);
+        return String.format("Note[%s: Arbeit=%.1f, Kolloquium=%.1f, Gewichtung=%.of%%]", rolle, noteArbeit, noteKolloquium, gewichtung * 100);
     }
 }
