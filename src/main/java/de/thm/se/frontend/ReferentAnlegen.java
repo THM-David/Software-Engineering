@@ -1,3 +1,5 @@
+package de.thm.se.frontend;
+
 import javax.swing.*;
 import java.awt.*;
 

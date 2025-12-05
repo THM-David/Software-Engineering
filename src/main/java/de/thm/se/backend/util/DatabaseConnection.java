@@ -13,7 +13,7 @@ import java.sql.*;
 public class DatabaseConnection {
 
     // Datenbankverbindungs-URL - SQLite Beispiel (anpassen nach Bedarf)
-    private static final String DB_URL = "jdbc:sqlite:database.db"; // URL hier einfügen
+    private static final String DB_URL = "jdbc:sqlite:profis.db";
     
     /**
      * Öffnet eine neue Datenbankverbindung.
