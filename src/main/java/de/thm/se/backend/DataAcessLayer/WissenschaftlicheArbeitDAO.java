@@ -60,6 +60,23 @@ public class WissenschaftlicheArbeitDAO {
         }
     }
 
+    //READ - Alle Arbeiten
+    public List<WissenschaftlicheArbeit> findAll() throws SQLException {
+        String sql = "SELECT * FROM WISSENSCHAFTLICHE_ARBEIT";
+        List<WissenschaftlicheArbeit> arbeiten = new ArrayList<>();
+
+        try(Connection conn = DatabaseConnection.connect();
+            PreparedStatement pstmt = conn.prepareStatement(sql)){
+
+                ResultSet rs = pstmt.executeQuery();
+                while (rs.next()) {
+                    arbeiten.add(mapResultSet(rs));
+                }
+                DatabaseConnection.closeResultSet(rs);
+            }
+        return arbeiten;
+    }
+
     // READ - Alle Arbeiten eines Studierenden
     public List<WissenschaftlicheArbeit> findByStudierendenId(int studierendenId) throws SQLException {
         String sql = "SELECT * FROM WISSENSCHAFTLICHE_ARBEIT WHERE studierenden_id = ?";

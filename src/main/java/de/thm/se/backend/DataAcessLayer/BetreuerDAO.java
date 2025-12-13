@@ -39,12 +39,12 @@ public class BetreuerDAO {
     }
 
     // READ - Betreuer nach ID
-    public Optional<Betreuer> findById(int id) throws SQLException {
+    public Optional<Betreuer> findById(int betreuer_id) throws SQLException {
         String sql = "SELECT * FROM BETREUER WHERE betreuer_id = ?";
 
         try (Connection conn = DatabaseConnection.connect();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1, id);
+            pstmt.setInt(1, betreuer_id);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
                 Betreuer betreuer = mapResultSet(rs);

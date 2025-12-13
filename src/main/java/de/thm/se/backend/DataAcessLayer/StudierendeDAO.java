@@ -117,13 +117,13 @@ public class StudierendeDAO {
     }
 
     // DELETE - Studierenden löschen
-    public boolean delete(String matrikelnummer) throws SQLException {
-        String sql = "DELETE FROM STUDIERENDE WHERE matrikelnummer = ?";
+    public boolean delete(int studierendenId) throws SQLException {
+        String sql = "DELETE FROM STUDIERENDE WHERE studierenden_id = ?";
 
         try (Connection conn = DatabaseConnection.connect();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setString(1, matrikelnummer);
+            pstmt.setInt(1, studierendenId);
             return pstmt.executeUpdate() > 0;
         }
     }
