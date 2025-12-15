@@ -1,5 +1,7 @@
 package de.thm.se.backend.DataAcessLayer;
 
+import de.thm.se.backend.datavalidation.PruefungsordnungValidator;
+import de.thm.se.backend.datavalidation.ValidationResult;
 import de.thm.se.backend.model.Pruefungsordnung;
 import de.thm.se.backend.util.DatabaseConnection;
 
@@ -10,11 +12,23 @@ import java.util.Optional;
 
 public class PruefungsordnungDAO {
 
+    private final PruefungsordnungValidator validator;
+
+    public  PruefungsordnungDAO() {
+        validator = new PruefungsordnungValidator();
+    }
+
     //CREATE - Neue Prüfungsordnung
     public int create(Pruefungsordnung pro) throws SQLException {
+
+        ValidationResult validationResult = validator.validate(pro);
+        if (!validationResult.isValid()) {
+            throw new IllegalArgumentException(validationResult.getErrorMessage());
+        }
+
         String sql = """
                 INSERT INTO PRUEFUNGSORDNUNG
-                (studiengang_id, bezeichnung, gueltig_ab, gueltig_bis, sws_referent, sws_koreferent)
+                (studiengang_id, bezeichnung, gueltig_ab, gueltig_bis, sws_referent, sws_korreferent)
                 VALUES(?, ?, ?, ?, ?, ?)
                 """;
         
@@ -41,7 +55,7 @@ public class PruefungsordnungDAO {
 
     //READ - Prüfungsordnung nach ID
     public Optional<Pruefungsordnung> findById(int id) throws SQLException {
-        String sql = "SELECT * FROM PRUEFUNGSORDNUNG WHERE pruefungs_id";
+        String sql = "SELECT * FROM PRUEFUNGSORDNUNG WHERE po_id = ?";
 
         try (Connection conn = DatabaseConnection.connect();
             PreparedStatement pstmt = conn.prepareStatement(sql)){
@@ -77,10 +91,16 @@ public class PruefungsordnungDAO {
     
     //UPDATE - Prüfungsordnung aktualisieren
     public boolean update(Pruefungsordnung pro) throws SQLException {
+
+        ValidationResult validationResult = validator.validateForUpdate(pro);
+        if (!validationResult.isValid()) {
+            throw new IllegalArgumentException(validationResult.getErrorMessage());
+        }
+
         String sql = """
                 UPDATE PRUEFUNGSORDNUNG
-                SET bezeichnung = ?, gueltig_ab = ?, gueltig_bis = ?, sws_referent = ?, sws_koreferent = ?
-                WHERE pruefungsordnung_id = ?
+                SET bezeichnung = ?, gueltig_ab = ?, gueltig_bis = ?, sws_referent = ?, sws_korreferent = ?
+                WHERE po_id = ?
                 """;
         
         try (Connection conn = DatabaseConnection.connect();
@@ -99,7 +119,7 @@ public class PruefungsordnungDAO {
 
     //DELETE - Prüfungsordnung löschen
     public boolean delete(int proId) throws SQLException { 
-        String sql = "DELETE FROM PRUEFUNGSORDNUNG WHERE pruefungsordnung_id = ?";
+        String sql = "DELETE FROM PRUEFUNGSORDNUNG WHERE po_id = ?";
 
         try(Connection conn = DatabaseConnection.connect();
             PreparedStatement pstmt = conn.prepareStatement(sql)){

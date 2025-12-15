@@ -1,5 +1,7 @@
 package de.thm.se.backend.DataAcessLayer;
 
+import de.thm.se.backend.datavalidation.StudiengangValidator;
+import de.thm.se.backend.datavalidation.ValidationResult;
 import de.thm.se.backend.model.Studiengang;
 import de.thm.se.backend.util.DatabaseConnection;
 
@@ -9,8 +11,21 @@ import java.util.List;
 import java.util.Optional;
 
 public class StudiengangDAO {
+
+    private final StudiengangValidator validator;
+
+    public StudiengangDAO() {
+        validator = new StudiengangValidator();
+    }
+
     // CREATE - Neuen Studiengang anlegen
     public int create(Studiengang sGang) throws SQLException {
+
+        ValidationResult validationResult = validator.validate(sGang);
+        if (!validationResult.isValid()) {
+            throw new IllegalArgumentException(validationResult.getErrorMessage());
+        }
+
         String sql = """
                 INSERT INTO STUDIENGANG
                 (fachbereich_id, bezeichnung, kuerzel, abschlusstitel, abschluss, aktiv)
@@ -28,9 +43,10 @@ public class StudiengangDAO {
             pstmt.setBoolean(6, sGang.isAktiv());
             pstmt.executeUpdate();
 
-            try (ResultSet generatedKey = pstmt.getGeneratedKeys()) {
-                if (generatedKey.next()) {
-                    return generatedKey.getInt(1);
+            try (Statement stmt = conn.createStatement();
+                 ResultSet rs = stmt.executeQuery("SELECT last_insert_rowid()")) {
+                if (rs.next()) {
+                    return rs.getInt(1);
                 }
                 throw new SQLException("Erstellen fehlgeschlagen, keine ID erhalten.");
             }
@@ -75,10 +91,16 @@ public class StudiengangDAO {
 
     // UPDATE - Studiengang aktualisieren
     public boolean update(Studiengang studiengang) throws SQLException {
+
+        ValidationResult validationResult = validator.validateForUpdate(studiengang);
+        if (!validationResult.isValid()) {
+            throw new IllegalArgumentException(validationResult.getErrorMessage());
+        }
+
         String sql = """
                 UPDATE STUDIENGANG
                 SET fachbereich_id = ?, bezeichnung = ?, kuerzel = ?, abschlusstitel = ?, abschluss = ?, aktiv = ?
-                WHERE studiengangs_id = ?
+                WHERE studiengang_id = ?
                 """;
 
         try (Connection conn = DatabaseConnection.connect();
@@ -98,7 +120,7 @@ public class StudiengangDAO {
 
     // DELETE - Studiengang löschen
     public boolean delete(int studiengangId) throws SQLException {
-        String sql = "DELETE FROM STUDIENGAGN WHERE studiengang_id = ?";
+        String sql = "DELETE FROM STUDIENGANG WHERE studiengang_id = ?";
 
         try (Connection conn = DatabaseConnection.connect();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {

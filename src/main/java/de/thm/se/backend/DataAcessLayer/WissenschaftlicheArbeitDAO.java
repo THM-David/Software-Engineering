@@ -3,6 +3,8 @@ package de.thm.se.backend.DataAcessLayer;
 import de.thm.se.backend.model.WissenschaftlicheArbeit;
 import de.thm.se.backend.model.ArbeitMitDetails;
 import de.thm.se.backend.util.DatabaseConnection;
+import de.thm.se.backend.datavalidation.ValidationResult;
+import de.thm.se.backend.datavalidation.WissenschaftlicheArbeitValidator;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -11,8 +13,20 @@ import java.util.Optional;
 
 public class WissenschaftlicheArbeitDAO {
 
+    private final WissenschaftlicheArbeitValidator validator;
+
+    public WissenschaftlicheArbeitDAO() {
+        validator = new WissenschaftlicheArbeitValidator();
+    }
+
     // CREATE - Neue Arbeit anlegen
     public int create(WissenschaftlicheArbeit arbeit) throws SQLException {
+
+        ValidationResult validationResult = validator.validate(arbeit);
+        if (!validationResult.isValid()) {
+            throw new IllegalArgumentException(validationResult.getErrorMessage());
+        }
+
         String sql = """
                 INSERT INTO WISSENSCHAFTLICHE_ARBEIT
                 (studierenden_id, studiengang_id, pruefungsordnung_id, semester_id, titel, typ, status)
@@ -20,7 +34,7 @@ public class WissenschaftlicheArbeitDAO {
                 """;
         // try with ressources schließt connection und preparedStatement nach Abschluss
         try (Connection conn = DatabaseConnection.connect();
-                PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, arbeit.getStudierendenId());
             pstmt.setInt(2, arbeit.getStudiengangId());
@@ -32,9 +46,10 @@ public class WissenschaftlicheArbeitDAO {
 
             pstmt.executeUpdate();
 
-            try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    return generatedKeys.getInt(1);
+            try (Statement stmt = conn.createStatement();
+                 ResultSet rs = stmt.executeQuery("SELECT last_insert_rowid()")) {
+                if (rs.next()) {
+                    return rs.getInt(1);
                 }
                 throw new SQLException("Erstellen fehlgeschlagen, keine ID erhalten.");
             }
@@ -156,6 +171,12 @@ public class WissenschaftlicheArbeitDAO {
 
     // UPDATE - Arbeit aktualisieren
     public boolean update(WissenschaftlicheArbeit arbeit) throws SQLException {
+
+        ValidationResult validationResult = validator.validateForUpdate(arbeit);
+        if (!validationResult.isValid()) {
+            throw new IllegalArgumentException(validationResult.getErrorMessage());
+        }
+
         String sql = """
                 UPDATE WISSENSCHAFTLICHE_ARBEIT
                 SET titel = ?, typ = ?, status = ?
@@ -176,6 +197,19 @@ public class WissenschaftlicheArbeitDAO {
 
     // UPDATE - Nur Status ändern (häufige Operation)
     public boolean updateStatus(int arbeitId, String neuerStatus) throws SQLException {
+
+        WissenschaftlicheArbeit tempArbeit = new WissenschaftlicheArbeit();
+        tempArbeit.setStatus(neuerStatus);
+
+        ValidationResult validationResult = new ValidationResult();
+        if (neuerStatus == null || neuerStatus.trim().isEmpty()) {
+            validationResult.addError("Status darf nicht leer sein");
+        }
+
+        if (!validationResult.isValid()) {
+            throw new IllegalArgumentException(validationResult.getErrorMessage());
+        }
+
         String sql = "UPDATE WISSENSCHAFTLICHE_ARBEIT SET status = ? WHERE arbeit_id = ?";
 
         try (Connection conn = DatabaseConnection.connect();

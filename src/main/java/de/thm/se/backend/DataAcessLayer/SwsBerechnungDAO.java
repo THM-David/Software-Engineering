@@ -1,5 +1,7 @@
 package de.thm.se.backend.DataAcessLayer;
 
+import de.thm.se.backend.datavalidation.SwsBerechnungValidator;
+import de.thm.se.backend.datavalidation.ValidationResult;
 import de.thm.se.backend.model.SwsBerechnung;
 import de.thm.se.backend.util.DatabaseConnection;
 
@@ -10,11 +12,23 @@ import java.util.Optional;
 
 public class SwsBerechnungDAO {
 
+    private final SwsBerechnungValidator validator;
+
+    public SwsBerechnungDAO() {
+        this.validator = new SwsBerechnungValidator();
+    }
+
     // CREATE - Neue SWS Berechnung
     public int create(SwsBerechnung swsBerechnung) throws SQLException {
+
+        ValidationResult validationResult = validator.validate(swsBerechnung);
+        if (!validationResult.isValid()) {
+            throw new IllegalArgumentException(validationResult.getErrorMessage());
+        }
+
         String sql = """
                 INSERT INTO SWS_BERECHNUNG
-                (arbet_id, betreuer_id, semester_id, pruefungsordnungId, sws_wert, rolle, berechnet_am)
+                (arbeit_id, betreuer_id, semester_id, pruefungsordnung_id, sws_wert, rolle, berechnet_am)
                 """;
 
         try (Connection conn = DatabaseConnection.connect();
@@ -26,13 +40,19 @@ public class SwsBerechnungDAO {
             pstmt.setInt(4, swsBerechnung.getPruefungsordnungId());
             pstmt.setFloat(5, swsBerechnung.getSwsWert());
             pstmt.setString(6, swsBerechnung.getRolle());
-            pstmt.setDate(7, java.sql.Date.valueOf(swsBerechnung.getBerechnetAm()));
+            // Berechnungsdatum
+            if (swsBerechnung.getBerechnetAm() != null) {
+                pstmt.setDate(7, java.sql.Date.valueOf(swsBerechnung.getBerechnetAm()));
+            } else {
+                pstmt.setNull(7, Types.DATE);
+            }
 
             pstmt.executeUpdate();
 
-            try (ResultSet generaretedKey = pstmt.getGeneratedKeys()) {
-                if (generaretedKey.next()) {
-                    return generaretedKey.getInt(sql);
+            try (Statement stmt = conn.createStatement();
+                 ResultSet rs = stmt.executeQuery("SELECT last_insert_rowid()")) {
+                if (rs.next()) {
+                    return rs.getInt(1);
                 }
                 throw new SQLException("Erstellen fehlgeschlagen, keine ID erhalten.");
             }
@@ -41,7 +61,7 @@ public class SwsBerechnungDAO {
 
     // READ - SWS Berechnung nach ID
     public Optional<SwsBerechnung> findById(int swsId) throws SQLException {
-        String sql = "SELECT * FROM SWS_BERECHNUNG WHERE sws_berechnung = ?";
+        String sql = "SELECT * FROM SWS_BERECHNUNG WHERE sws_id = ?";
 
         try (Connection conn = DatabaseConnection.connect();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -77,6 +97,12 @@ public class SwsBerechnungDAO {
 
     // UPDATE - SWS Berechnung aktualisieren
     public boolean update(SwsBerechnung sws) throws SQLException {
+
+        ValidationResult validationResult = validator.validateForUpdate(sws);
+        if (!validationResult.isValid()) {
+            throw new IllegalArgumentException(validationResult.getErrorMessage());
+        }
+
         String sql = """
                 UPDATE SWS_BERECHNUNG
                 SET arbeit_id = ?, betreuer_id = ?, semester_id = ?, pruefungsordnung_id = ?, sws_wert = ?, rolle = ?, berechnet_am = ?
@@ -92,7 +118,12 @@ public class SwsBerechnungDAO {
             pstmt.setInt(4, sws.getPruefungsordnungId());
             pstmt.setFloat(5, sws.getSwsWert());
             pstmt.setString(6, sws.getRolle());
-            pstmt.setDate(7, java.sql.Date.valueOf(sws.getBerechnetAm()));
+            // Berechnungsdatum
+            if (sws.getBerechnetAm() != null) {
+                pstmt.setDate(7, java.sql.Date.valueOf(sws.getBerechnetAm()));
+            } else {
+                pstmt.setNull(7, Types.DATE);
+            }
             pstmt.setInt(8, sws.getSwsId());
 
             return pstmt.executeUpdate() > 0;
@@ -121,7 +152,10 @@ public class SwsBerechnungDAO {
         sws.setPruefungsordnungId(rs.getInt("pruefungsordnung_id"));
         sws.setSwsWert(rs.getFloat("sws_wert"));
         sws.setRolle(rs.getString("rolle"));
-        sws.setBerechnetAm(rs.getDate("berechnet_am").toLocalDate());
+        Date berechnetAm = rs.getDate("berechnet_am");
+        if (berechnetAm != null) {
+            sws.setBerechnetAm(berechnetAm.toLocalDate());
+        }
         return sws;
     }
 }

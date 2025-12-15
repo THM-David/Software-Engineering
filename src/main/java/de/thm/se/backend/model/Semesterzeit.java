@@ -6,6 +6,7 @@ import java.time.LocalDate;
  * Model-Klasse für SemesterZeit
  * Entspricht der Tabelle SEMESTERZEIT
  */
+
 public class Semesterzeit {
     private int semesterZeitId;
     private LocalDate beginn;

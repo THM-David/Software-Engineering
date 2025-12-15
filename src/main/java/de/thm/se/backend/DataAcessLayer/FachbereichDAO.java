@@ -1,5 +1,7 @@
 package de.thm.se.backend.DataAcessLayer;
 
+import de.thm.se.backend.datavalidation.FachbereichValidator;
+import de.thm.se.backend.datavalidation.ValidationResult;
 import de.thm.se.backend.model.Fachbereich;
 import de.thm.se.backend.util.DatabaseConnection;
 
@@ -10,11 +12,23 @@ import java.util.Optional;
 
 public class FachbereichDAO {
 
+    private final FachbereichValidator validator;
+
+    public FachbereichDAO(FachbereichValidator validator) {
+        this.validator = validator;
+    }
+
     // CREATE - Neuen Fachbereich anlegen
     public int create(Fachbereich fb) throws SQLException {
+
+        ValidationResult validationResult = validator.validate(fb);
+        if (!validationResult.isValid()) {
+            throw new IllegalArgumentException(validationResult.getErrorMessage());
+        }
+
         String sql = """
                 INSERT INTO FACHBEREICH
-                (bezeichnung = ?, fbname = ?)
+                (bezeichnung, fbname)
                 VALUES(?, ?)
                 """;
 
@@ -73,6 +87,12 @@ public class FachbereichDAO {
 
     // UPDATE - Fachbereich aktualisieren
     public boolean update(Fachbereich fachbereich) throws SQLException {
+
+        ValidationResult validationResult = validator.validateForUpdate(fachbereich);
+        if (!validationResult.isValid()) {
+            throw new IllegalArgumentException(validationResult.getErrorMessage());
+        }
+
         String sql = """
                 UPDATE FACHBEREICH
                 SET bezeichnung = ?, fbname = ?

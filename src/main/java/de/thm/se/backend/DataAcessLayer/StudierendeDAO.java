@@ -1,5 +1,7 @@
 package de.thm.se.backend.DataAcessLayer;
 
+import de.thm.se.backend.datavalidation.StudierendeValidator;
+import de.thm.se.backend.datavalidation.ValidationResult;
 import de.thm.se.backend.model.Studierende;
 import de.thm.se.backend.util.DatabaseConnection;
 
@@ -10,8 +12,20 @@ import java.util.Optional;
 
 public class StudierendeDAO {
 
+    private final StudierendeValidator validator;
+
+    public  StudierendeDAO() {
+        validator = new StudierendeValidator();
+    }
+
     // CREATE - Neuen Studierenden anlegen
     public int create(Studierende studi) throws SQLException {
+
+        ValidationResult validationResult = validator.validate(studi);
+        if (!validationResult.isValid()) {
+            throw new IllegalArgumentException(validationResult.getErrorMessage());
+        }
+
         String sql = """
                 INSERT INTO STUDIERENDE
                 (matrikelnummer, vorname, nachname, email, geburtsdatum, adresse)
@@ -19,7 +33,7 @@ public class StudierendeDAO {
                 """;
 
         try (Connection conn = DatabaseConnection.connect();
-                PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, studi.getMatrikelnummer());
             pstmt.setString(2, studi.getVorname());
@@ -30,11 +44,12 @@ public class StudierendeDAO {
 
             pstmt.executeUpdate();
 
-            try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    return generatedKeys.getInt(1);
+            try (Statement stmt = conn.createStatement();
+                 ResultSet rs = stmt.executeQuery("SELECT last_insert_rowid()")) {
+                if (rs.next()) {
+                    return rs.getInt(1);
                 }
-                throw new SQLException("Erstellen fehlgeschlagen, keine ID erhalten");
+                throw new SQLException("Erstellen fehlgeschlagen, keine ID erhalten (last_insert_rowid() fehlgeschlagen)");
             }
         }
     }
@@ -77,7 +92,7 @@ public class StudierendeDAO {
 
     // READ - Studierender nach Matrikelnummer
     public Optional<Studierende> findByMatrikelnummer(String matrikelnummer) throws SQLException {
-        String sql = "SELECT * FROM STUDIERENDER WHERE matrikelnummer = ?";
+        String sql = "SELECT * FROM STUDIERENDE WHERE matrikelnummer = ?";
 
         try (Connection conn = DatabaseConnection.connect();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -95,6 +110,12 @@ public class StudierendeDAO {
 
     // UPDATE - Studierende aktualisieren
     public boolean update(Studierende studi) throws SQLException {
+
+        ValidationResult validationResult = validator.validateForUpdate(studi);
+        if (!validationResult.isValid()) {
+            throw new IllegalArgumentException(validationResult.getErrorMessage());
+        }
+
         String sql = """
                 UPDATE STUDIERENDE
                 SET matrikelnummer = ?, vorname = ?, nachname = ?, email = ?, geburtsdatum = ?, adresse = ?

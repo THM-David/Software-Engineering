@@ -12,7 +12,7 @@ public class Pruefungsordnung {
     private String bezeichnung;
     private LocalDate gueltigAb;
     private LocalDate gueltigBis;
-    private int swsReferent;
+    private int swsReferent; // Würden nicht Float-Werte mehr Sinn ergeben, so wie bei der SWS-Berechnung?
     private int swsKoreferent;
 
     // Konstruktor

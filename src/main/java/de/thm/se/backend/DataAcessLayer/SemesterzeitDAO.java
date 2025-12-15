@@ -1,5 +1,7 @@
 package de.thm.se.backend.DataAcessLayer;
 
+import de.thm.se.backend.datavalidation.SemesterzeitValidator;
+import de.thm.se.backend.datavalidation.ValidationResult;
 import de.thm.se.backend.model.Semesterzeit;
 import de.thm.se.backend.util.DatabaseConnection;
 
@@ -9,8 +11,21 @@ import java.util.List;
 import java.util.Optional;
 
 public class SemesterzeitDAO {
+
+    private final SemesterzeitValidator validator;
+
+    public SemesterzeitDAO(SemesterzeitValidator validator) {
+        this.validator = validator;
+    }
+
     // CREATE - Neue Semesterzeit anlegen
     public int create(Semesterzeit semZ) throws SQLException {
+
+        ValidationResult validationResult = validator.validate(semZ);
+        if (!validationResult.isValid()) {
+            throw new IllegalArgumentException(validationResult.getErrorMessage());
+        }
+
         String sql = """
                 INSERT INTO SEMESTERZEIT
                 (beginn, ende, bezeichnung)
@@ -37,7 +52,7 @@ public class SemesterzeitDAO {
 
     // READ - Semesterzeit nach ID
     public Optional<Semesterzeit> findById(int id) throws SQLException {
-        String sql = "SELECT * FROM SEMESTERZEIT WHERE fachbereich_id";
+        String sql = "SELECT * FROM SEMESTERZEIT WHERE semesterzeit_id = ?";
 
         try (Connection conn = DatabaseConnection.connect();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -73,6 +88,12 @@ public class SemesterzeitDAO {
 
     // UPDATE - Semesterzeit aktualisieren
     public boolean update(Semesterzeit semZeit) throws SQLException {
+
+        ValidationResult validationResult = validator.validateForUpdate(semZeit);
+        if (!validationResult.isValid()) {
+            throw new IllegalArgumentException(validationResult.getErrorMessage());
+        }
+
         String sql = """
                 UPDATE SEMESTERZEIT
                 SET beginn = ?, ende = ?, bezeichnung = ?

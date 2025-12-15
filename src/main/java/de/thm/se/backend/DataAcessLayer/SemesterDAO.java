@@ -1,5 +1,7 @@
 package de.thm.se.backend.DataAcessLayer;
 
+import de.thm.se.backend.datavalidation.SemesterValidator;
+import de.thm.se.backend.datavalidation.ValidationResult;
 import de.thm.se.backend.model.Semester;
 import de.thm.se.backend.util.DatabaseConnection;
 
@@ -9,9 +11,21 @@ import java.util.List;
 import java.util.Optional;
 
 public class SemesterDAO {
+
+    private final SemesterValidator validator;
+
+    public SemesterDAO(SemesterValidator semesterValidator) {
+        this.validator = semesterValidator;
+    }
     
     //CREATE - Neues Semester
     public int create(Semester sem) throws SQLException {
+
+        ValidationResult validationResult = validator.validate(sem);
+        if (!validationResult.isValid()) {
+            throw new IllegalArgumentException(validationResult.getErrorMessage());
+        }
+
         String sql = """
                 INSERT INTO SEMESTER
                 (semesterzeit_id, bezeichnung, typ, jahr)
@@ -38,7 +52,7 @@ public class SemesterDAO {
 
     //READ - Semester nach ID
     public Optional<Semester> findById(int semesterId) throws SQLException {
-        String sql = "SELECT * FROM SEMESTER WHERE semester_id";
+        String sql = "SELECT * FROM SEMESTER WHERE semester_id = ?";
 
         try (Connection conn = DatabaseConnection.connect();
             PreparedStatement pstmt = conn.prepareStatement(sql)){
@@ -75,6 +89,12 @@ public class SemesterDAO {
 
     //UPDATE - Semester aktualisieren
     public boolean update(Semester sem) throws SQLException {
+
+        ValidationResult validationResult = validator.validateForUpdate(sem);
+        if (!validationResult.isValid()) {
+            throw new IllegalArgumentException(validationResult.getErrorMessage());
+        }
+
         String sql = """
                 UPDATE SEMESTER
                 SET semesterzeit_id = ?, bezeichnung = ?, typ = ?, jahr = ?

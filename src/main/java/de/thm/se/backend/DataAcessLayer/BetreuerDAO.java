@@ -1,5 +1,7 @@
 package de.thm.se.backend.DataAcessLayer;
 
+import de.thm.se.backend.datavalidation.BetreuerValidator;
+import de.thm.se.backend.datavalidation.ValidationResult;
 import de.thm.se.backend.model.Betreuer;
 import de.thm.se.backend.util.DatabaseConnection;
 
@@ -10,11 +12,23 @@ import java.util.Optional;
 
 public class BetreuerDAO {
 
+    private final BetreuerValidator validator;
+
+    public BetreuerDAO(BetreuerValidator validator) {
+        this.validator = validator;
+    }
+
     // CREATE - Neuen Betreuer anlegen
     public int create(Betreuer betreuer) throws SQLException {
+
+        ValidationResult validationResult = validator.validate(betreuer);
+        if (!validationResult.isValid()) {
+            throw new IllegalArgumentException(validationResult.getErrorMessage());
+        }
+
         String sql = """
                 INSERT INTO BETREUER
-                (vorname = ?, nachname = ?, titel = ?, email = ?, rolle = ?)
+                (vorname, nachname, titel, email, rolle)
                 VALUES (?, ?, ?, ?, ?)
                 """;
 
@@ -80,6 +94,12 @@ public class BetreuerDAO {
 
     // UPDATE - Betreuer aktualisieren
     public boolean update(Betreuer betreuer) throws SQLException {
+
+        ValidationResult validationResult = validator.validateForUpdate(betreuer);
+        if (!validationResult.isValid()) {
+            throw new IllegalArgumentException(validationResult.getErrorMessage());
+        }
+
         String sql = """
                 UPDATE BETREUER
                 SET vorname = ?, nachname = ?, titel = ?, email = ?, rolle = ?

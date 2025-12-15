@@ -1,5 +1,7 @@
 package de.thm.se.backend.DataAcessLayer;
 
+import de.thm.se.backend.datavalidation.NotenbestandteilValidator;
+import de.thm.se.backend.datavalidation.ValidationResult;
 import de.thm.se.backend.model.Notenbestandteil;
 import de.thm.se.backend.util.DatabaseConnection;
 
@@ -10,8 +12,20 @@ import java.util.Optional;
 
 public class NotenbestandteilDAO {
 
+    private final NotenbestandteilValidator validator;
+
+    public NotenbestandteilDAO(NotenbestandteilValidator validator) {
+        this.validator = validator;
+    }
+
     // CREATE - Neuen Notenbestandteil
     public int create(Notenbestandteil note) throws SQLException {
+
+        ValidationResult validationResult = validator.validate(note);
+        if (!validationResult.isValid()) {
+            throw new IllegalArgumentException(validationResult.getErrorMessage());
+        }
+
         String sql = """
                 INSERT INTO NOTENBESTANDTEIL
                 (arbeit_id, betreuer_id, rolle, note_arbeit, note_kolloquium, gewichtung)
@@ -78,6 +92,12 @@ public class NotenbestandteilDAO {
 
     // UPDATE - Notenbestandteil aktualisieren
     public boolean update(Notenbestandteil note) throws SQLException {
+
+        ValidationResult validationResult = validator.validateForUpdate(note);
+        if (!validationResult.isValid()) {
+            throw new IllegalArgumentException(validationResult.getErrorMessage());
+        }
+
         String sql = """
                 UPDATE NOTENBESTANDTEIL
                 SET rolle = ?, note_Arbeit = ?, note_kolloquium = ?, gewichtung = ?
@@ -112,7 +132,7 @@ public class NotenbestandteilDAO {
     // Hilfsmethode: ResultSet in Objetk umwandeln
     private Notenbestandteil mapResultSet(ResultSet rs) throws SQLException {
         Notenbestandteil note = new Notenbestandteil();
-        note.setNotenId(rs.getInt("note_id"));
+        note.setNotenId(rs.getInt("noten_id"));
         note.setArbeitId(rs.getInt("arbeit_id"));
         note.setBetreuerId(rs.getInt("betreuer_id"));
         note.setRolle(rs.getString("rolle"));

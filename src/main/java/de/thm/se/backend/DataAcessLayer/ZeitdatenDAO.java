@@ -1,5 +1,7 @@
 package de.thm.se.backend.DataAcessLayer;
 
+import de.thm.se.backend.datavalidation.ValidationResult;
+import de.thm.se.backend.datavalidation.ZeitdatenValidator;
 import de.thm.se.backend.model.Zeitdaten;
 import de.thm.se.backend.util.DatabaseConnection;
 
@@ -10,8 +12,19 @@ import java.util.Optional;
 
 public class ZeitdatenDAO {
 
+    private final ZeitdatenValidator validator;
+
+    public ZeitdatenDAO() {
+        this.validator = new ZeitdatenValidator();
+    }
+
     // CREATE - Neue Zeitdaten anlegen
     public int create(Zeitdaten zeit) throws SQLException {
+        ValidationResult validationResult = validator.validate(zeit);
+        if (!validationResult.isValid()) {
+            throw new IllegalArgumentException(validationResult.getErrorMessage());
+        }
+
         String sql = """
                 INSERT INTO ZEITDATEN
                 (arbeit_id, anfangsdatum, abgabedatum, kolloquiumsdatum)
@@ -22,15 +35,34 @@ public class ZeitdatenDAO {
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, zeit.getArbeitId());
-            pstmt.setDate(2, java.sql.Date.valueOf(zeit.getAnfangsdatum()));
-            pstmt.setDate(3, java.sql.Date.valueOf(zeit.getAbgabedatum()));
-            pstmt.setDate(4, java.sql.Date.valueOf(zeit.getKolloquiumsdatum()));
 
-            pstmt.executeQuery();
+            // Anfangsdatum
+            if (zeit.getAnfangsdatum() != null) {
+                pstmt.setDate(2, java.sql.Date.valueOf(zeit.getAnfangsdatum()));
+            } else {
+                pstmt.setNull(2, Types.DATE);
+            }
 
-            try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    return generatedKeys.getInt(1);
+            // Abgabedatum
+            if (zeit.getAbgabedatum() != null) {
+                pstmt.setDate(3, java.sql.Date.valueOf(zeit.getAbgabedatum()));
+            } else {
+                pstmt.setNull(3, Types.DATE);
+            }
+
+            // Kolloquiumsdatum ist optional
+            if (zeit.getKolloquiumsdatum() != null) {
+                pstmt.setDate(4, java.sql.Date.valueOf(zeit.getKolloquiumsdatum()));
+            } else {
+                pstmt.setNull(4, Types.DATE);
+            }
+
+            pstmt.executeUpdate();
+
+            try (Statement stmt = conn.createStatement();
+                 ResultSet rs = stmt.executeQuery("SELECT last_insert_rowid()")) {
+                if (rs.next()) {
+                    return rs.getInt(1);
                 }
                 throw new SQLException("Erstellen fehlgeschlagen, keine ID erhalten.");
             }
@@ -75,6 +107,11 @@ public class ZeitdatenDAO {
 
     // UPDATE - Zeitdaten aktualisieren
     public boolean update(Zeitdaten zeit) throws SQLException {
+        ValidationResult validationResult = validator.validateForUpdate(zeit);
+        if (!validationResult.isValid()) {
+            throw new IllegalArgumentException(validationResult.getErrorMessage());
+        }
+
         String sql = """
                 UPDATE ZEITDATEN
                 SET arbeit_id = ?, anfangsdatum = ?, abgabedatum = ?, kolloquiumsdatum = ?
@@ -85,9 +122,28 @@ public class ZeitdatenDAO {
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, zeit.getArbeitId());
-            pstmt.setDate(2, java.sql.Date.valueOf(zeit.getAnfangsdatum()));
-            pstmt.setDate(3, java.sql.Date.valueOf(zeit.getAbgabedatum()));
-            pstmt.setDate(4, java.sql.Date.valueOf(zeit.getKolloquiumsdatum()));
+
+            // Anfangsdatum
+            if (zeit.getAnfangsdatum() != null) {
+                pstmt.setDate(2, java.sql.Date.valueOf(zeit.getAnfangsdatum()));
+            } else {
+                pstmt.setNull(2, Types.DATE);
+            }
+
+            // Abgabedatum
+            if (zeit.getAbgabedatum() != null) {
+                pstmt.setDate(3, java.sql.Date.valueOf(zeit.getAbgabedatum()));
+            } else {
+                pstmt.setNull(3, Types.DATE);
+            }
+
+            // Kolloquiumsdatum ist optional
+            if (zeit.getKolloquiumsdatum() != null) {
+                pstmt.setDate(4, java.sql.Date.valueOf(zeit.getKolloquiumsdatum()));
+            } else {
+                pstmt.setNull(4, Types.DATE);
+            }
+
             pstmt.setInt(5, zeit.getZeitId());
 
             return pstmt.executeUpdate() > 0;
@@ -96,7 +152,7 @@ public class ZeitdatenDAO {
 
     // DELETE - Zeitdaten löschen
     public boolean delete(int zeitId) throws SQLException {
-        String sql = "DELETE ZEITDATEN WHERE zeit_id = ?";
+        String sql = "DELETE FROM ZEITDATEN WHERE zeit_id = ?";
         try (Connection conn = DatabaseConnection.connect();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
@@ -110,9 +166,23 @@ public class ZeitdatenDAO {
         Zeitdaten zeit = new Zeitdaten();
         zeit.setZeitId(rs.getInt("zeit_id"));
         zeit.setArbeitId(rs.getInt("arbeit_id"));
-        zeit.setAnfangsdatum(rs.getDate("anfangsdatum").toLocalDate());
-        zeit.setAbgabedatum(rs.getDate("abgabedatum").toLocalDate());
-        zeit.setKolloquiumsdatum(rs.getDate("kolloquiumsdatum").toLocalDate());
+        // Anfangsdatum
+        Date anfangsdatum = rs.getDate("anfangsdatum");
+        if (anfangsdatum != null) {
+            zeit.setAnfangsdatum(anfangsdatum.toLocalDate());
+        }
+
+        // Abgabedatum
+        Date abgabedatum = rs.getDate("abgabedatum");
+        if (abgabedatum != null) {
+            zeit.setAbgabedatum(abgabedatum.toLocalDate());
+        }
+
+        // Kolloquiumsdatum (optional)
+        Date kolloquiumsdatum = rs.getDate("kolloquiumsdatum");
+        if (kolloquiumsdatum != null) {
+            zeit.setKolloquiumsdatum(kolloquiumsdatum.toLocalDate());
+        }
         return zeit;
     }
 }
