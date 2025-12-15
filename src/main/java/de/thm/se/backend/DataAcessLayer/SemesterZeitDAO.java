@@ -104,7 +104,7 @@ public class SemesterzeitDAO {
     // Hilfsmethode: ResultSet in Objekt umwandeln
     private Semesterzeit mapResultSet(ResultSet rs) throws SQLException {
         Semesterzeit semZ = new Semesterzeit();
-        semZ.setSemesterZeitId(rs.getInt("semesterzeit_id"));
+        semZ.setSemesterzeitId(rs.getInt("semesterzeit_id"));
         semZ.setBeginn(rs.getDate("beginn").toLocalDate());
         semZ.setEnde(rs.getDate("ende").toLocalDate());
         semZ.setBezeichnung(rs.getString("bezeichnung"));

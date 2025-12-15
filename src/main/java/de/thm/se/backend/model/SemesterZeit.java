@@ -7,7 +7,7 @@ import java.time.LocalDate;
  * Entspricht der Tabelle SEMESTERZEIT
  */
 public class Semesterzeit {
-    private int semesterZeitId;
+    private int semesterzeitId;
     private LocalDate beginn;
     private LocalDate ende;
     private String bezeichnung;
@@ -23,12 +23,12 @@ public class Semesterzeit {
     }
 
     // Getter und Setter
-    public int getSemesterZeitId() {
-        return semesterZeitId;
+    public int getSemesterzeitId() {
+        return semesterzeitId;
     }
 
-    public void setSemesterZeitId(int semesterZeitId) {
-        this.semesterZeitId = semesterZeitId;
+    public void setSemesterzeitId(int semesterZeitId) {
+        this.semesterzeitId = semesterZeitId;
     }
 
     public LocalDate getBeginn() {
@@ -58,6 +58,6 @@ public class Semesterzeit {
     // Hilfsmethoden
     @Override
     public String toString() {
-        return String.format("SemesterZeit[ID=%d, Bezeichnung=&s", semesterZeitId, bezeichnung);
+        return String.format("Semesterzeit[ID=%d, Bezeichnung=&s", semesterzeitId, bezeichnung);
     }
 }
