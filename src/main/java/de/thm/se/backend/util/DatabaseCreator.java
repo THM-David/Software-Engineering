@@ -1,4 +1,5 @@
 package de.thm.se.backend.util;
+import java.lang.Thread.State;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -29,6 +30,7 @@ public class DatabaseCreator {
             createSwsBerechnungTable(stmt);
             createExterneDatenquelleTable(stmt);
             createImportvorgangTable(stmt);
+            createFachbereichTable(stmt);
 
             System.out.println("Alle Tabellen wurden erfolgreich erstellt.");
         }
@@ -228,5 +230,17 @@ public class DatabaseCreator {
             """;
         stmt.execute(sql);
         System.out.println("Tabelle IMPORTVORGANG erstellt.");
+    }
+
+    private static void createFachbereichTable(Statement stmt) throws SQLException {
+        String sql = """
+                CREATE TABLE IF NOT EXISTS FACHBEREICH (
+                    fachbereich_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    bezeichnung TEXT NOT NULL UNIQUE,
+                    fbname TEXT
+                );
+                """;
+        stmt.execute(sql);
+        System.out.println("Tabelle FACHBEREICH erstellt.");
     }
 }
