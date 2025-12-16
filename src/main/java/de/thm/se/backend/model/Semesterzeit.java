@@ -24,7 +24,7 @@ public class Semesterzeit {
     }
 
     // Getter und Setter
-    public int getSemesterZeitId() {
+    public int getSemesterzeitId() {
         return semesterzeitId;
     }
 
