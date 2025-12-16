@@ -1,5 +1,4 @@
 package de.thm.se.backend.util;
-import java.lang.Thread.State;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;

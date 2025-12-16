@@ -79,7 +79,7 @@ public class SemesterzeitValidator {
     public ValidationResult validateForUpdate(Semesterzeit semZ) {
         ValidationResult result = validate(semZ);
 
-        if (semZ.getSemesterZeitId() <= 0) {
+        if (semZ.getSemesterzeitId() <= 0) {
             result.addError("Semesterzeit-ID muss für Update gesetzt sein");
         }
 
