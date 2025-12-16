@@ -51,9 +51,9 @@ const Layout = ({ children }) => {
 
                     <p className="px-6 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 mt-6">Schnellzugriff</p>
                     {/* HIER DIE NEUEN ICONS */}
-                    <SidebarItem to="/studierende/neu" icon={<IconAddStudent />} label="Neuer Student" />
-                    <SidebarItem to="/referenten/neu" icon={<IconAddReferent />} label="Neuer Referent" />
                     <SidebarItem to="/arbeiten/neu" icon={<IconAddWork />} label="Neue Arbeit" />
+                    <SidebarItem to="/studierende/neu" icon={<IconAddStudent />} label="Neuer Student" />
+                    <SidebarItem to="/referenten/neu" icon={<IconAddStudent />} label="Neuer Referent" />
 
                     <p className="px-6 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 mt-6">System</p>
                     <SidebarItem to="/import" icon={<IconUpload />} label="Datei Import" />
