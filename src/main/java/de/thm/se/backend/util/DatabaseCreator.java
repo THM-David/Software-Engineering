@@ -150,11 +150,12 @@ public class DatabaseCreator {
         String sql = """
             CREATE TABLE IF NOT EXISTS BETREUER (
                 betreuer_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                fachbereich_id INTEGER NOT NULL UNIQUE,
                 vorname TEXT NOT NULL,
                 nachname TEXT NOT NULL,
                 titel TEXT,
                 email TEXT,
-                rolle TEXT
+                FOREIGN KEY (fachbereich_id) REFERENCES FACHBEREICH (fachbereich_id)
             );
             """;
         stmt.execute(sql);

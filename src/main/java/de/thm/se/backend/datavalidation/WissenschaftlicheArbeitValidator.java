@@ -16,11 +16,11 @@ public class WissenschaftlicheArbeitValidator {
 
     // Erlaubte Werte für Typ und Status
     private static final List<String> ERLAUBTE_TYPEN = Arrays.asList(
-            "Bachelor", "Master"
+            "Bachelorarbeit", "Masterarbeit", "Projektarbeit"
     );
 
     private static final List<String> ERLAUBTE_STATUS = Arrays.asList(
-            "Geplant", "In Bearbeitung", "Abgeschlossen", "Abgebrochen"
+            "Angemeldet", "Geplant", "In Bearbeitung", "Abgeschlossen", "Abgebrochen", "Bewertet"
     );
 
     // Validierungsregeln
