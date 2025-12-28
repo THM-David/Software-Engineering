@@ -2,6 +2,9 @@ package de.thm.se.backend.datavalidation;
 
 import de.thm.se.backend.model.Fachbereich;
 
+import org.springframework.stereotype.Repository;
+
+@Repository
 public class FachbereichValidator {
 
     private static final int MIN_BEZEICHNUNG_LAENGE = 3;

@@ -4,6 +4,9 @@ import de.thm.se.backend.model.Notenbestandteil;
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
+@Repository
 public class NotenbestandteilValidator {
 
     private static final List<String> ERLAUBTE_ROLLEN = Arrays.asList(

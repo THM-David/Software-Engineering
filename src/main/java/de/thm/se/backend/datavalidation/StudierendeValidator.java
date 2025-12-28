@@ -4,6 +4,9 @@ import de.thm.se.backend.model.Studierende;
 import java.time.LocalDate;
 import java.util.regex.Pattern;
 
+import org.springframework.stereotype.Repository;
+
+@Repository
 /**
  * Validator für Studierende-Objekte.
  * Prüft Vollständigkeit und Gültigkeit der Daten.

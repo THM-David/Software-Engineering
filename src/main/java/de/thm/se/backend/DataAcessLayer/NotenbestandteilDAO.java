@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.stereotype.Repository;
+
+@Repository
 public class NotenbestandteilDAO {
 
     private final NotenbestandteilValidator validator;
@@ -74,7 +77,7 @@ public class NotenbestandteilDAO {
 
     // READ - Alle Noten
     public List<Notenbestandteil> findAll() throws SQLException {
-        String sql = "SELECT * FROM NOTENBESTANDTEIL WHERE note_id = ?";
+        String sql = "SELECT * FROM NOTENBESTANDTEIL";
         List<Notenbestandteil> noten = new ArrayList<>();
 
         try (Connection conn = DatabaseConnection.connect();

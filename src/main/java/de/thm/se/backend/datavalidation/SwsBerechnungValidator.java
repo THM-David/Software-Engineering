@@ -6,6 +6,9 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
+@Repository
 /**
  * Validator für SwsBerechnung-Objekte.
  * Prüft Vollständigkeit und Gültigkeit der Daten sowie Plausibilität der SWS-Werte.
