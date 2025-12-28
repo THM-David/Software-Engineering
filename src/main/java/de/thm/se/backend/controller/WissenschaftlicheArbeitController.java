@@ -36,7 +36,7 @@ public class WissenschaftlicheArbeitController {
         return wissenschaftlicheArbeitDAO.findByStatus(status);
     }
 
-    @GetMapping("/details")
+    @GetMapping("/all/details")
     public List<ArbeitMitDetails> getAlleArbeitenMitDetails() throws SQLException {
         return wissenschaftlicheArbeitDAO.findAlleMitDetails();
     }

@@ -5,6 +5,9 @@ import de.thm.se.backend.model.WissenschaftlicheArbeit;
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
+@Repository
 /**
  * Validator für WissenschaftlicheArbeit-Objekte.
  * Prüft Vollständigkeit und Gültigkeit der Daten.

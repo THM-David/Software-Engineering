@@ -3,6 +3,9 @@ package de.thm.se.backend.datavalidation;
 import de.thm.se.backend.model.Zeitdaten;
 import java.time.LocalDate;
 
+import org.springframework.stereotype.Repository;
+
+@Repository
 /**
  * Validator für Zeitdaten-Objekte.
  * Prüft Vollständigkeit und Gültigkeit der Daten sowie logische Konsistenz der Datumsangaben.

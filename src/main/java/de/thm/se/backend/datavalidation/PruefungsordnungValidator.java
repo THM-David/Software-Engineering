@@ -4,6 +4,9 @@ import de.thm.se.backend.model.Pruefungsordnung;
 
 import java.time.LocalDate;
 
+import org.springframework.stereotype.Repository;
+
+@Repository
 public class PruefungsordnungValidator {
 
     private static final int MIN_BEZEICHNUNG_LAENGE = 3;

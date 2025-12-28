@@ -4,6 +4,9 @@ import de.thm.se.backend.model.Semesterzeit;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
+import org.springframework.stereotype.Repository;
+
+@Repository
 public class SemesterzeitValidator {
 
     private static final int MIN_BEZEICHNUNG_LAENGE = 5;

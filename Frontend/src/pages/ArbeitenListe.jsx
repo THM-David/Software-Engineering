@@ -8,7 +8,7 @@ const ArbeitenListe = () => {
 
     useEffect(() => {
         // Nutzt den Endpoint, der JOINs macht für Namen statt IDs
-        api.get('/wissenschaftliche-arbeiten/details')
+        api.get('/wissenschaftliche-arbeiten/all/details')
             .then(res => setArbeiten(res.data))
             .catch(err => console.error(err));
     }, []);
