@@ -22,7 +22,7 @@ export const arbeitService = {
     
     //Arbeit aktualisieren
     update: async (id, arbeit) => {
-        const response = await api.post(`wissenschaftliche-arbeiten/${id}`)
+        const response = await api.post(`/wissenschaftliche-arbeiten/${id}`)
         return response.data;
     }, 
 
